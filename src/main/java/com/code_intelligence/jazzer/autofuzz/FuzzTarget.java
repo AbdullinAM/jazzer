@@ -42,6 +42,18 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public final class FuzzTarget {
+  private static final String AUTOFUZZ_JUNIT_REPRODUCER_TEMPLATE =
+          "import org.junit.Test;\n"
+                  + "import java.lang.Throwable;\n"
+                  + "\n"
+                  + "public class CrashTest_%1$s {\n"
+                  + "  @Test\n"
+                  + "  public void test() throws Throwable {\n"
+                  + "    try {\n"
+                  + "      %2$s;\n"
+                  + "    catch (Throwable e) {}\n"
+                  + "  }\n"
+                  + "}";
   private static final String AUTOFUZZ_REPRODUCER_TEMPLATE =
       "public class Crash_%1$s {\n"
           + "  public static void main(String[] args) throws Throwable {\n"
@@ -294,8 +306,8 @@ public final class FuzzTarget {
       fuzzerTestOneInput(data, codegenVisitor);
     } catch (Throwable ignored) {
     }
-    String javaSource = String.format(AUTOFUZZ_REPRODUCER_TEMPLATE, sha, codegenVisitor.generate());
-    Path javaPath = Paths.get(reproducerPath, String.format("Crash_%s.java", sha));
+    String javaSource = String.format(AUTOFUZZ_JUNIT_REPRODUCER_TEMPLATE, sha, codegenVisitor.generate());
+    Path javaPath = Paths.get(reproducerPath, String.format("CrashTest_%s.java", sha));
     try {
       Files.write(javaPath, javaSource.getBytes(StandardCharsets.UTF_8));
     } catch (IOException e) {
