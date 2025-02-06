@@ -51,7 +51,7 @@ public final class FuzzTarget {
                   + "  public void test() throws Throwable {\n"
                   + "    try {\n"
                   + "      %2$s;\n"
-                  + "    catch (Throwable e) {}\n"
+                  + "    } catch (Throwable e) {}\n"
                   + "  }\n"
                   + "}";
   private static final String AUTOFUZZ_REPRODUCER_TEMPLATE =
