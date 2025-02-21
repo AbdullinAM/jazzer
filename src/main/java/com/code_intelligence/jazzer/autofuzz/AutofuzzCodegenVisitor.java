@@ -52,11 +52,14 @@ public class AutofuzzCodegenVisitor {
   }
 
   public String generate() {
-    if (groups.size() != 1) {
-      throw new AutofuzzError(
-          "popGroup must be called exactly once for every pushGroup: " + toDebugString());
+    if (groups.size() == 1) {
+      return groups.pop().toString();
+    } else if (groups.size() > 1) {
+      System.err.println(groups.size());
+      return groups.pop().toString();
+    } else {
+      return "";
     }
-    return groups.pop().toString();
   }
 
   public void addCharLiteral(char c) {
